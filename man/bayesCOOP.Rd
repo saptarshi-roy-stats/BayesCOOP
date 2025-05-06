@@ -47,7 +47,9 @@ A data frame with the following columns:
 \examples{
 rm(list = ls())
 
+########################
 ###### libraries #######
+########################
 
 library(remotes)
 install_github("nyiuab/BhGLM", force=T, build_vignettes=T)
@@ -55,7 +57,10 @@ library(BhGLM)
 library(tidyverse)
 library(caret)
 
-###### sourcing required functions ###### (please change the path accordingly)
+#########################################
+###### sourcing required functions ###### 
+#########################################
+
 source("https://github.com/himelmallick/BayesCOOP/tree/master/R/bayesCoop.R")
 
 #########################################################################################
@@ -88,8 +93,8 @@ rm(positions)
 #########################################################################################
 ############################## BayesCoop Implementation #################################
 #########################################################################################
-set.seed(1)
 
+set.seed(1)
 result = bayesCoop(data_train, data_test, family = "gaussian", 
                    ss = c(0.05, 1), group = TRUE,
                    alpha_dirich = 1, maxit = 100, 
