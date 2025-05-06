@@ -10,7 +10,14 @@ install.packages("devtools")
 library(devtools)
 ```
 ## Installation
+To install the latest version of DAssemble from Github, run the
+following command:
 
+    install.packages('devtools')
+    library(devtools)
+    devtools::install_github("himelmallick/DAssemble")
+    library(DAssemble)
+    
 Once the dependencies are installed, `BayesCOOP` can be loaded using the following command:
 ```r
 devtools::install_github("himelmallick/BayesCOOP")
