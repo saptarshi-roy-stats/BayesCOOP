@@ -65,4 +65,5 @@ result = bayesCoop(data_train, data_test, family = "gaussian",
                    bbiters = 1100, bbburn = 100,
                    abd_thresh = 0, prev_thresh = 0.1,
                    Warning = TRUE, verbose = TRUE)
+result
 ```
