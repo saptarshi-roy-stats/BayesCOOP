@@ -30,11 +30,11 @@ bayesCoop(data_train, data_test, family = "gaussian",
 A list with the following elements:
 \itemize{
 \item beta_postmed
-\item beta_postmed
-\item beta_samples
-\item y_pred
-\item mspe
-\item time
+\item rho_postmed
+\item beta_samples: Posterior beta samples
+\item y_pred: Predicted values of Y
+\item mspe: Mean squared prediction error
+\item time:Ttime in minutes
 }
 }
 \description{
@@ -54,8 +54,8 @@ rm(list = ls())
 ###### libraries #######
 ########################
 
-library(remotes)
-install_github("nyiuab/BhGLM", force=T, build_vignettes=T)
+#library(remotes)
+#install_github("nyiuab/BhGLM", force=T, build_vignettes=T)
 library(BhGLM)
 library(tidyverse)
 library(caret)
@@ -105,5 +105,5 @@ result = bayesCoop(data_train, data_test, family = "gaussian",
                    abd_thresh = 0, prev_thresh = 0.1,
                    Warning = TRUE, verbose = TRUE)
 
-rsult
+result
 }
