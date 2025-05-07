@@ -28,7 +28,6 @@ following command:
 
 ## sourcing required functions
 
-    rm(list = ls())
     source("~/bayesCOOP/BC/bayesCoop.R")
 
     ## Loading required package: coda
@@ -126,13 +125,13 @@ following command:
     ## EM Coordinate Decent Iterations: 1 
     ## Computational time: 0.015 minutes 
     ## EM Coordinate Decent Iterations: 1 
-    ## Computational time: 0.024 minutes 
+    ## Computational time: 0.025 minutes 
     ## EM Coordinate Decent Iterations: 1 
-    ## Computational time: 0.013 minutes 
+    ## Computational time: 0.014 minutes 
     ## EM Coordinate Decent Iterations: 1 
     ## Computational time: 0.023 minutes 
     ## EM Coordinate Decent Iterations: 1 
-    ## Computational time: 0.019 minutes
+    ## Computational time: 0.02 minutes
 
     #result$beta_postmed
 
@@ -153,4 +152,4 @@ following command:
 
     result$time
 
-    ## [1] 0.331
+    ## [1] 0.333
