@@ -3,7 +3,7 @@ library(MCMCpack)
 library(rmutil)
 
 #### source helper functions #### (please change the path accordingly)
-source("~/OneDrive - Texas A&M University/Academic/Research/MyResearch/Bayesian-Cooperative-Learning/Collaborative-codes/Cleaned-codes/helperFunctions")
+source("https://github.com/himelmallick/BayesCOOP/blob/master/R/helperFunctions.R")
 
 # Function to implement bayesCoop
 # data_train: a list of feature_table, sample_metadata and feature_metadata from training data. {Cite integrated learner for more references}.
