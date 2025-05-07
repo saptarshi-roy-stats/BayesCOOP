@@ -1,6 +1,6 @@
-# BayesMultiview
+# BayesCOOP
 
-The repository contains the analysis and simulation codes from the Bayesian multiview project.
+The repository contains the analysis codes from the Bayesian coopertive learning project.
 
 ## Dependencies
 
