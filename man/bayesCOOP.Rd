@@ -27,11 +27,14 @@ bayesCoop(data_train, data_test, family = "gaussian",
 \item{verbose}{Default is TRUE.}
 }
 \value{
-A data frame with the following columns:
+A list with the following elements:
 \itemize{
-\item A
-\item B
-\item C
+\item beta_postmed
+\item beta_postmed
+\item beta_samples
+\item y_pred
+\item mspe
+\item time
 }
 }
 \description{
