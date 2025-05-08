@@ -34,7 +34,7 @@ A list with the following elements:
 \item beta_samples: Posterior beta samples
 \item y_pred: Predicted values of Y
 \item mspe: Mean squared prediction error
-\item time:Ttime in minutes
+\item time:Time in minutes
 }
 }
 \description{
