@@ -1,7 +1,6 @@
 # BayesCOOP
 
-The repository contains the analysis codes from the Bayesian coopertive
-project.
+The repository contains the analysis codes from the Bayesian coopertive learning project.
 
 ## Dependencies
 
