@@ -1,6 +1,7 @@
 # BayesCOOP
 
-The repository contains the analysis codes from the Bayesian coopertive learning project.
+The repository contains the analysis codes from the Bayesian coopertive
+project.
 
 ## Dependencies
 
@@ -105,7 +106,7 @@ following command:
     result = bayesCoop(data_train, data_test, family = "gaussian", 
                        ss = c(0.05, 1), group = TRUE,
                        alpha_dirich = 1, maxit = 1, 
-                       bbiters = 11, bbburn = 10,
+                       bbiters = 11, bbburn = 9,
                        abd_thresh = 0, prev_thresh = 0.1,
                        Warning = TRUE, verbose = TRUE)
 
@@ -114,41 +115,80 @@ following command:
     ## EM Coordinate Decent Iterations: 1 
     ## Computational time: 0.022 minutes 
     ## EM Coordinate Decent Iterations: 1 
-    ## Computational time: 0.035 minutes 
+    ## Computational time: 0.034 minutes 
     ## EM Coordinate Decent Iterations: 1 
     ## Computational time: 0.039 minutes 
     ## EM Coordinate Decent Iterations: 1 
     ## Computational time: 0.027 minutes 
     ## EM Coordinate Decent Iterations: 1 
-    ## Computational time: 0.024 minutes 
+    ## Computational time: 0.023 minutes 
     ## EM Coordinate Decent Iterations: 1 
     ## Computational time: 0.015 minutes 
     ## EM Coordinate Decent Iterations: 1 
-    ## Computational time: 0.025 minutes 
+    ## Computational time: 0.024 minutes 
     ## EM Coordinate Decent Iterations: 1 
     ## Computational time: 0.014 minutes 
     ## EM Coordinate Decent Iterations: 1 
-    ## Computational time: 0.023 minutes 
+    ## Computational time: 0.027 minutes 
     ## EM Coordinate Decent Iterations: 1 
-    ## Computational time: 0.02 minutes
+    ## Computational time: 0.019 minutes
 
     #result$beta_postmed
 
     result$rho_postmed
 
-    ## [1] 0.0005647181
+    ## [1] 0.0003371288
 
     #result$beta_samples
 
     result$y_pred
 
-    ## [1]  25.5238395  -6.8344675 -10.3726248   9.7306132   0.8182733 -16.7161457
-    ## [7] -10.9832246   8.8337367
+    ## [1]  28.664845  -9.629658 -12.767316   6.556811  -2.311947 -17.247320  -7.433600
+    ## [8]  14.168185
 
     result$mspe
 
-    ## [1] 483.148
+    ## [1] 501.3541
 
     result$time
 
-    ## [1] 0.333
+    ## [1] 0.335
+
+    ######################################
+    # Visualization of Posterior Samples #
+    ######################################
+
+    ##############
+    # Trace Plot #
+    ##############
+
+    library(coda)
+    par(mar=c(2,2,2,2))
+    plot(mcmc(result$beta_samples[,1:9]),density=FALSE,smooth=TRUE)
+
+![](https://github.com/himelmallick/BayesCOOP/blob/master/misc/unnamed-chunk-13-1.png)
+
+    #############
+    # Histogram #
+    #############
+
+    library(psych)
+
+    ## Registered S3 method overwritten by 'psych':
+    ##   method         from  
+    ##   plot.residuals rmutil
+
+    ## 
+    ## Attaching package: 'psych'
+
+    ## The following object is masked from 'package:rmutil':
+    ## 
+    ##     plot.residuals
+
+    ## The following objects are masked from 'package:ggplot2':
+    ## 
+    ##     %+%, alpha
+
+    multi.hist(result$beta_samples[,1:9],density=TRUE,main="")
+
+![](https://github.com/himelmallick/BayesCOOP/blob/master/misc/unnamed-chunk-14-1.png)
