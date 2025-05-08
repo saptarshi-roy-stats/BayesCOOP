@@ -97,3 +97,28 @@ result$mspe
 ```{r}
 result$time
 ```
+
+Let's check MCMC convergence of the reciprocal Bayesian LASSO estimator through two visualizations: trace plots and histograms.
+
+```{r}
+######################################
+# Visualization of Posterior Samples #
+######################################
+
+##############
+# Trace Plot #
+##############
+
+library(coda)
+par(mar=c(2,2,2,2))
+plot(mcmc(result$beta_samples[,1:9]),density=FALSE,smooth=TRUE)
+```
+
+```{r}
+#############
+# Histogram #
+#############
+
+library(psych)
+multi.hist(result$beta_samples[,1:9],density=TRUE,main="")
+```
