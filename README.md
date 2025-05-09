@@ -100,7 +100,7 @@ following command:
     data_test$sample_metadata = data_test$sample_metadata[positions, ]
     rm(positions)
 
-# BayesCoop Implementation
+## BayesCoop Implementation
 
     set.seed(1)
     result = bayesCoop(data_train, data_test, family = "gaussian", 
@@ -154,7 +154,7 @@ following command:
 
     ## [1] 0.335
 
-# Visualization of Posterior Samples
+## Visualization of Posterior Samples
 Let's check MCMC convergence of the reciprocal Bayesian LASSO estimator through two visualizations: trace plots and histograms.
 
     ######################################
