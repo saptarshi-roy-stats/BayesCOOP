@@ -98,6 +98,7 @@ result$mspe
 result$time
 ```
 
+# Visualization of Posterior Samples
 Let's check MCMC convergence of the reciprocal Bayesian LASSO estimator through two visualizations: trace plots and histograms.
 
 ```{r}
