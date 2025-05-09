@@ -26,7 +26,7 @@ following command:
     library(tidyverse)
     library(caret)
 
-## sourcing required functions
+## Sourcing required functions
 
     source("~/bayesCOOP/BC/bayesCoop.R")
 
