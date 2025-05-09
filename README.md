@@ -30,47 +30,6 @@ following command:
 
     source("~/bayesCOOP/BC/bayesCoop.R")
 
-    ## Loading required package: coda
-
-    ## Loading required package: MASS
-
-    ## 
-    ## Attaching package: 'MASS'
-
-    ## The following object is masked from 'package:dplyr':
-    ## 
-    ##     select
-
-    ## ##
-    ## ## Markov Chain Monte Carlo Package (MCMCpack)
-
-    ## ## Copyright (C) 2003-2025 Andrew D. Martin, Kevin M. Quinn, and Jong Hee Park
-
-    ## ##
-    ## ## Support provided by the U.S. National Science Foundation
-
-    ## ## (Grants SES-0350646 and SES-0350613)
-    ## ##
-
-    ## 
-    ## Attaching package: 'rmutil'
-
-    ## The following object is masked from 'package:tidyr':
-    ## 
-    ##     nesting
-
-    ## The following object is masked from 'package:BhGLM':
-    ## 
-    ##     covariates
-
-    ## The following object is masked from 'package:stats':
-    ## 
-    ##     nobs
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     as.data.frame, units
-
 ## Loading the StelzerDOS real dataset
 
     data_train = get(load(url("https://raw.githubusercontent.com/himelmallick/IntegratedLearner/master/data/StelzerDOS.RData"))); 
@@ -102,96 +61,283 @@ following command:
 
 ## BayesCoop Implementation
 
-    set.seed(1)
-    result = bayesCoop(data_train, data_test, family = "gaussian", 
-                       ss = c(0.05, 1), group = TRUE,
-                       alpha_dirich = 1, maxit = 1, 
-                       bbiters = 11, bbburn = 9,
-                       abd_thresh = 0, prev_thresh = 0.1,
-                       Warning = TRUE, verbose = TRUE)
+```         
+set.seed(1)
+result = bayesCoop(data_train, data_test, family = "gaussian", 
+                   ss = c(0.05, 1), group = TRUE,
+                   alpha_dirich = 1, maxit = 1, 
+                   bbiters = 110, bbburn = 10,
+                   abd_thresh = 0, prev_thresh = 0.1,
+                   Warning = TRUE, verbose = TRUE)
 
-    ## EM Coordinate Decent Iterations: 1 
-    ## Computational time: 0.023 minutes 
-    ## EM Coordinate Decent Iterations: 1 
-    ## Computational time: 0.022 minutes 
-    ## EM Coordinate Decent Iterations: 1 
-    ## Computational time: 0.034 minutes 
-    ## EM Coordinate Decent Iterations: 1 
-    ## Computational time: 0.039 minutes 
-    ## EM Coordinate Decent Iterations: 1 
-    ## Computational time: 0.027 minutes 
-    ## EM Coordinate Decent Iterations: 1 
-    ## Computational time: 0.023 minutes 
-    ## EM Coordinate Decent Iterations: 1 
-    ## Computational time: 0.015 minutes 
-    ## EM Coordinate Decent Iterations: 1 
-    ## Computational time: 0.024 minutes 
-    ## EM Coordinate Decent Iterations: 1 
-    ## Computational time: 0.014 minutes 
-    ## EM Coordinate Decent Iterations: 1 
-    ## Computational time: 0.027 minutes 
-    ## EM Coordinate Decent Iterations: 1 
-    ## Computational time: 0.019 minutes
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.022 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.021 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.033 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.039 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.027 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.023 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.015 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.024 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.013 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.023 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.019 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.025 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.019 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.023 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.021 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.026 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.019 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.035 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.021 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.025 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.016 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.028 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.015 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.021 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.019 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.038 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.023 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.029 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.025 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.024 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.018 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.024 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.021 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.017 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.018 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.015 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.031 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.02 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.032 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.016 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.028 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.029 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.026 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.027 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.029 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.026 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.018 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.024 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.021 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.026 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.028 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.024 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.022 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.026 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.022 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.028 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.021 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.026 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.019 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.02 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.017 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.024 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.023 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.024 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.026 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.029 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.017 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.025 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.017 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.022 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.021 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.022 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.017 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.019 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.029 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.021 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.028 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.019 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.022 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.028 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.033 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.017 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.019 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.016 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.023 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.027 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.032 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.018 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.027 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.036 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.02 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.022 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.028 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.017 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.023 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.018 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.019 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.025 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.03 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.018 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.022 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.021 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.021 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.022 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.027 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.024 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.019 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.02 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.02 minutes 
+## EM Coordinate Decent Iterations: 1 
+## Computational time: 0.027 minutes
 
-    #result$beta_postmed
+#result$beta_postmed
 
-    result$rho_postmed
+result$rho_postmed
 
-    ## [1] 0.0003371288
+## [1] 0.0001039843
 
-    #result$beta_samples
+#result$beta_samples
 
-    result$y_pred
+result$y_pred
 
-    ## [1]  28.664845  -9.629658 -12.767316   6.556811  -2.311947 -17.247320  -7.433600
-    ## [8]  14.168185
+## [1]  20.352509  -2.883056 -12.267622   5.012925  -4.011487 -13.139735  -6.224429
+## [8]  13.160894
 
-    result$mspe
+result$mspe
 
-    ## [1] 501.3541
+## [1] 488.5006
 
-    result$time
+result$time
 
-    ## [1] 0.335
+## [1] 3.172
+```
 
 ## Visualization of Posterior Samples
 Let's check MCMC convergence of the reciprocal Bayesian LASSO estimator through two visualizations: trace plots and histograms.
 
-    ######################################
-    # Visualization of Posterior Samples #
-    ######################################
+```         
+######################################
+# Visualization of Posterior Samples #
+######################################
 
-    ##############
-    # Trace Plot #
-    ##############
+##############
+# Trace Plot #
+##############
 
-    library(coda)
-    par(mar=c(2,2,2,2))
-    plot(mcmc(result$beta_samples[,1:9]),density=FALSE,smooth=TRUE)
-
+library(coda)
+par(mar=c(2,2,2,2))
+plot(mcmc(result$beta_samples[,1:9]),density=FALSE,smooth=TRUE)
+```
 ![](https://github.com/himelmallick/BayesCOOP/blob/master/misc/unnamed-chunk-13-1.png)
 
-    #############
-    # Histogram #
-    #############
+```         
+#############
+# Histogram #
+#############
 
-    library(psych)
-
-    ## Registered S3 method overwritten by 'psych':
-    ##   method         from  
-    ##   plot.residuals rmutil
-
-    ## 
-    ## Attaching package: 'psych'
-
-    ## The following object is masked from 'package:rmutil':
-    ## 
-    ##     plot.residuals
-
-    ## The following objects are masked from 'package:ggplot2':
-    ## 
-    ##     %+%, alpha
-
-    multi.hist(result$beta_samples[,1:9],density=TRUE,main="")
+library(psych)
+multi.hist(result$beta_samples[,1:9],density=TRUE,main="")
+```
 
 ![](https://github.com/himelmallick/BayesCOOP/blob/master/misc/unnamed-chunk-14-1.png)
