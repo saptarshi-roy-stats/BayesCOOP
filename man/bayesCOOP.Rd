@@ -27,25 +27,26 @@ bayesCoop(data_train, data_test, family = "gaussian",
 \item{verbose}{Default is TRUE.}
 }
 \value{
-A list with the following elements:
+A list containing approximate pseudo-posterior samples of the regression coefficients and hyperparameters:
 \itemize{
-\item beta_postmed
-\item rho_postmed
-\item beta_samples: Posterior beta samples
-\item y_pred: Predicted values of Y
-\item mspe: Mean squared prediction error
-\item time:Time in minutes
+\item beta_postmed: vector of size px1, posterior median estimate of the beta.
+\item rho_postmed: scalar, posterior median estimate of the agreement penalty $\rho$.
+\item beta_samples: matrix of size npost x p where npost is the number of posterior samples. Returns  approximate posterior samples of beta.
+\item y_pred: a vector. Returns the predicted value of y.
+\item mspe: a scalar. Returns the mean squared prediction error.
+\item time: a scalar. Returns the time needed to run the procedure. 
 }
 }
 \description{
 \code{BayesCOOP} provides the analysis codes from the Bayesian multiview project.
 }
 \details{
-\itemize{
-\item A
-\item B
-\item C
-}
+This function implements the BayesCOOP methodology for supervised multimodal integration. 
+It combines jittered group spike-and-slab LASSO regularization with intermediate fusion to 
+enable integrative learning across multiple data modalities. For uncertainty quantification,
+BayesCOOP applies the Bayesian bootstrap to generate approximate posterior samples by 
+performing maximum a posteriori (MAP) estimation on jittered and resampled multimodal datasets. 
+Currently, only continuous outcomes are supported.
 }
 \examples{
 rm(list = ls())
