@@ -154,7 +154,9 @@ following command:
 
     ## [1] 0.335
 
-# Let's check MCMC convergence of the reciprocal Bayesian LASSO estimator through two visualizations: trace plots and histograms.
+# Visualization of Posterior Samples
+Let's check MCMC convergence of the reciprocal Bayesian LASSO estimator through two visualizations: trace plots and histograms.
+
     ######################################
     # Visualization of Posterior Samples #
     ######################################
