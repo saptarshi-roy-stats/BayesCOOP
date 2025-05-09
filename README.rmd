@@ -69,7 +69,7 @@ set.seed(1)
 result = bayesCoop(data_train, data_test, family = "gaussian", 
                    ss = c(0.05, 1), group = TRUE,
                    alpha_dirich = 1, maxit = 1, 
-                   bbiters = 11, bbburn = 9,
+                   bbiters = 110, bbburn = 10,
                    abd_thresh = 0, prev_thresh = 0.1,
                    Warning = TRUE, verbose = TRUE)
 ```
