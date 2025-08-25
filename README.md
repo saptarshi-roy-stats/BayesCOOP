@@ -28,7 +28,7 @@ following command:
 
 ## sourcing required functions
 
-    source("~/bayesCOOP/BC/bayesCoop.R")
+    source("https://github.com/himelmallick/BayesCOOP/blob/master/R/helperFunctions.R")
 
 ## Loading the StelzerDOS real dataset
 
