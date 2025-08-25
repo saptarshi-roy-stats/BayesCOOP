@@ -26,7 +26,7 @@ following command:
     library(tidyverse)
     library(caret)
 
-## Sourcing required functions
+## sourcing required functions
 
     source("~/bayesCOOP/BC/bayesCoop.R")
 
@@ -59,275 +59,154 @@ following command:
     data_test$sample_metadata = data_test$sample_metadata[positions, ]
     rm(positions)
 
-## BayesCoop Implementation
+### Using top features for the train set
 
-```         
-set.seed(1)
-result = bayesCoop(data_train, data_test, family = "gaussian", 
-                   ss = c(0.05, 1), group = TRUE,
-                   alpha_dirich = 1, maxit = 1, 
-                   bbiters = 110, bbburn = 10,
-                   abd_thresh = 0, prev_thresh = 0.1,
-                   Warning = TRUE, verbose = TRUE)
+    ########################
+    # Prevalence filtering #
+    ########################
+     
+    abd_threshold = 0
+    prev_threshold = 0.1
+    data_train$feature_table <- data_train$feature_table[rowMeans(data_train$feature_table > abd_threshold) > prev_threshold,]
+    data_train$feature_metadata<-data_train$feature_metadata[rownames(data_train$feature_table),]
+     
+    ######################
+    # Variance filtering #
+    ######################
+     
+    data_train$feature_metadata$featureType<-as.factor(data_train$feature_metadata$featureType)
+    name_layers<-with(droplevels(data_train$feature_metadata), list(levels = levels(data_train$feature_metadata$featureType)), nlevels = nlevels(data_train$featureType))$levels
+    keep_features<-c()
+     
+    for (i in seq_along(name_layers)){
+     
+      ##################
+      # Extract layers #
+      ##################
+     
+      include_list<-data_train$feature_metadata %>% filter(featureType == name_layers[i])
+      dat_slice<-data_train$feature_table[rownames(data_train$feature_table) %in% include_list$featureID, ]
+     
+      ################################
+      # Per-layer variance filtering #
+      ################################
+     
+      sds<-apply(dat_slice, 1, sd)
+      dat_slice_filtered<-dat_slice[which(sds>quantile(sds, .95)),]
+      keep_features<-c(keep_features, rownames(dat_slice_filtered))
+      rm(dat_slice); rm(dat_slice_filtered)
+    }
+     
+    #########################
+    # Final filtered tables #
+    #########################
+     
+    data_train$feature_table<-data_train$feature_table[keep_features, ]
+    data_train$feature_metadata<-data_train$feature_metadata[keep_features,]
+     
+     
+    ################
+    # Sanity check #
+    ################
+     
+    all(rownames(data_train$feature_table)==rownames(data_train$feature_metadata))
 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.022 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.021 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.033 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.039 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.027 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.023 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.015 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.024 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.013 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.023 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.019 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.025 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.019 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.023 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.021 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.026 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.019 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.035 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.021 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.025 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.016 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.028 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.015 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.021 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.019 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.038 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.023 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.029 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.025 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.024 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.018 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.024 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.021 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.017 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.018 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.015 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.031 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.02 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.032 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.016 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.028 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.029 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.026 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.027 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.029 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.026 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.018 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.024 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.021 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.026 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.028 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.024 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.022 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.026 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.022 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.028 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.021 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.026 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.019 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.02 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.017 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.024 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.023 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.024 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.026 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.029 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.017 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.025 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.017 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.022 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.021 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.022 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.017 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.019 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.029 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.021 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.028 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.019 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.022 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.028 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.033 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.017 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.019 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.016 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.023 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.027 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.032 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.018 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.027 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.036 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.02 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.022 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.028 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.017 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.023 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.018 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.019 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.025 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.03 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.018 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.022 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.021 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.021 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.022 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.027 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.024 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.019 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.02 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.02 minutes 
-## EM Coordinate Decent Iterations: 1 
-## Computational time: 0.027 minutes
+    ## [1] TRUE
 
-#result$beta_postmed
+    all(colnames(data_train$feature_table)==rownames(data_train$sample_metadata))
 
-result$rho_postmed
+    ## [1] TRUE
 
-## [1] 0.0001039843
+### Using top features for the test set
 
-#result$beta_samples
+    ########################
+    # Prevalence filtering #
+    ########################
 
-result$y_pred
+    abd_threshold = 0
+    prev_threshold = 0.1
+    data_test$feature_table <- data_test$feature_table[rowMeans(data_test$feature_table > abd_threshold) > prev_threshold,]
+    data_test$feature_metadata<-data_test$feature_metadata[rownames(data_test$feature_table),]
 
-## [1]  20.352509  -2.883056 -12.267622   5.012925  -4.011487 -13.139735  -6.224429
-## [8]  13.160894
+    ######################
+    # Variance filtering #
+    ######################
 
-result$mspe
+    data_test$feature_metadata$featureType<-as.factor(data_test$feature_metadata$featureType)
+    name_layers<-with(droplevels(data_test$feature_metadata), list(levels = levels(data_test$feature_metadata$featureType)), nlevels = nlevels(data_test$featureType))$levels
+    keep_features<-c()
 
-## [1] 488.5006
+    for (i in seq_along(name_layers)){
+      
+      ##################
+      # Extract layers #
+      ##################
+      
+      include_list<-data_test$feature_metadata %>% filter(featureType == name_layers[i])
+      dat_slice<-data_test$feature_table[rownames(data_test$feature_table) %in% include_list$featureID, ]
+      
+      ################################
+      # Per-layer variance filtering #
+      ################################
+      
+      sds<-apply(dat_slice, 1, sd)
+      dat_slice_filtered<-dat_slice[which(sds>quantile(sds, .95)),]
+      keep_features<-c(keep_features, rownames(dat_slice_filtered))
+      rm(dat_slice); rm(dat_slice_filtered)
+    }
 
-result$time
+    #########################
+    # Final filtered tables #
+    #########################
 
-## [1] 3.172
-```
+    data_test$feature_table<-data_test$feature_table[keep_features, ]
+    data_test$feature_metadata<-data_test$feature_metadata[keep_features,]
 
-## Visualization of Posterior Samples
-Let's check MCMC convergence of the reciprocal Bayesian LASSO estimator through two visualizations: trace plots and histograms.
 
-```         
-######################################
-# Visualization of Posterior Samples #
-######################################
+    ################
+    # Sanity check #
+    ################
 
-##############
-# Trace Plot #
-##############
+    all(rownames(data_test$feature_table)==rownames(data_test$feature_metadata))
 
-library(coda)
-par(mar=c(2,2,2,2))
-plot(mcmc(result$beta_samples[,1:9]),density=FALSE,smooth=TRUE)
+    ## [1] TRUE
+
+    all(colnames(data_test$feature_table)==rownames(data_test$sample_metadata))
+
+    ## [1] TRUE
+
+# BayesCoop Implementation
+
+    set.seed(1)
+    result = bayesCoop(data_train, data_test, family = "gaussian", 
+                       ss = c(0.05, 1), group = TRUE,
+                       alpha_dirich = 1, maxit = 100, 
+                       bbiters = 1100, bbburn = 1000,
+                       abd_thresh = 0, prev_thresh = 0.1,
+                       Warning = TRUE, verbose = TRUE)
+
+    result$mspe
+
+    ## [1] 672.6159
+
+    result$time
+
+    ## [1] 0.061
+
+Let’s check MCMC convergence of the reciprocal Bayesian LASSO estimator
+through two visualizations: trace plots and histograms.
+
+    ######################################
+    # Visualization of Posterior Samples #
+    ######################################
+
+    ##############
+    # Trace Plot #
+    ##############
+
+    library(coda)
+    par(mar=c(2,2,2,2))
+    plot(mcmc(result$beta_samples[,1:9]),density=FALSE,smooth=TRUE)
 ```
 ![](https://github.com/himelmallick/BayesCOOP/blob/master/misc/unnamed-chunk-13-1.png)
 
