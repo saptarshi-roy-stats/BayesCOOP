@@ -5,11 +5,11 @@
 \title{Scalable Bayesian Cooperative Learning for Multimodal Integration}
 \usage{
 bayesCoop(data_train, data_test, family = "gaussian", 
-                     ss = c(0.05, 1), group = TRUE,
-                     alpha_dirich = 1, maxit = 100, 
-                     bbiters = 1100, bbburn = 100,
-                     abd_thresh = 0, prev_thresh = 0.1,
-                     Warning = TRUE, verbose = TRUE)
+                      ss = c(0.05, 1), group = TRUE,
+                      bb = TRUE, alpha_dirich = 1, 
+                      bbiters = 1100, bbburn = 100, maxit = 100,
+                      filter = TRUE, abd_thresh = 0, prev_thresh = 0.1,
+                      Warning = TRUE, verbose = TRUE, control = list())
 }
 \arguments{
 \item{data_train}{A list of feature_table, sample_metadata and feature_metadata from training data..}
@@ -17,6 +17,7 @@ bayesCoop(data_train, data_test, family = "gaussian",
 \item{family}{Currently supports only Gaussian family. Default value: "gaussian".}
 \item{ss}{(s0, s1): s0 and s1 respectively stands for the scale parameters of the spike and slab parts, s0 < s1. Default value: s0 = 0.05, s1 = 1.}
 \item{group}{logical. If TRUE, group is a list of variable names, group[[k]] includes variables in the k-th group. For ungrouped predictors, the prior is double-exponential with scale ss[2] and mean 0. If FALSE, group = NULL. Default value: TRUE.}
+\item{bb}{logical. If TRUE, Bayesian bootstrap is implemented, else, maximum a posteriori (MAP) estimation is implemented which requires additional parameters to be passed to \code{control}. Default value: TRUE.}
 \item{alpha_dirich}{Shape parameter for Dirichlet distribution. Default value: 1.}
 \item{maxit}{Integer giving the maximal number of EM iterations.}
 \item{bbiters}{Number of Bayesian bootstrap iterations. Default value: 1100.}
