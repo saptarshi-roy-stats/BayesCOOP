@@ -1,11 +1,21 @@
+---
+title: "README"
+output: md_document
+date: "2025-08-24"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 # BayesCOOP
 
-The repository contains the analysis codes from the Bayesian coopertive learning project.
+The repository contains the analysis codes from the Bayesian coopertive project.
 
 ## Dependencies
 
 `BayesCOOP` requires the following `R` package: `devtools` (for installation only). Please install it before installing `BayesCOOP`, which can be done as follows (execute from within a fresh R session):
+
 ```r
 install.packages("devtools")
 library(devtools)
@@ -25,18 +35,15 @@ library(tidyverse)
 library(caret)
 ```
 
-## Sourcing required functions
+## sourcing required functions
 ```{r message = FALSE, warning=FALSE}
-source("https://github.com/himelmallick/BayesCOOP/tree/master/R/bayesCoop.R")
+source("https://github.com/himelmallick/BayesCOOP/blob/master/R/helperFunctions.R")
 ```
 
 ## Loading the StelzerDOS real dataset
 ```{r message = FALSE, warning=FALSE}
-data_train = get(load(url("https://raw.githubusercontent.com/himelmallick/IntegratedLearner/master/data/StelzerDOS.RData"))); 
-rm(pcl)
-
-data_test = get(load(url("https://raw.githubusercontent.com/himelmallick/IntegratedLearner/master/data/StelzerDOS_valid.RData"))); 
-rm(pcl)
+data_train = get(load(url("https://raw.githubusercontent.com/himelmallick/IntegratedLearner/master/data/StelzerDOS.RData"))); rm(pcl)
+data_test = get(load(url("https://raw.githubusercontent.com/himelmallick/IntegratedLearner/master/data/StelzerDOS_valid.RData"))); rm(pcl)
 ```
 
 ## Pre-processing the longitudinal data by considering only baseline observations 
@@ -63,45 +70,37 @@ data_test$sample_metadata = data_test$sample_metadata[positions, ]
 rm(positions)
 ```
 
-## BayesCoop Implementation 
-```{r BayesCOOP_result, message = FALSE, warning = FALSE}
+# BayesCoop Implementation 
+```r 
 set.seed(1)
 result = bayesCoop(data_train, data_test, family = "gaussian", 
                    ss = c(0.05, 1), group = TRUE,
-                   alpha_dirich = 1, maxit = 1, 
-                   bbiters = 110, bbburn = 10,
-                   abd_thresh = 0, prev_thresh = 0.1,
+                   bb = TRUE, alpha_dirich = 1, 
+                   bbiters = 1100, bbburn = 100, maxit = 100,
+                   filter = TRUE, abd_thresh = 0, prev_thresh = 0.1,
                    Warning = TRUE, verbose = TRUE)
 ```
 
-```{r}
-#result$beta_postmed
+```{r BayesCOOP_result, message = FALSE, warning = FALSE, echo = FALSE, results='hide'}
+set.seed(1)
+result = bayesCoop(data_train, data_test, family = "gaussian", 
+                   ss = c(0.05, 1), group = TRUE,
+                   bb = TRUE, alpha_dirich = 1, 
+                   bbiters = 1100, bbburn = 100, maxit = 100,
+                   filter = TRUE, abd_thresh = 0, prev_thresh = 0.1,
+                   Warning = TRUE, verbose = TRUE)
 ```
 
-```{r}
-result$rho_postmed
-```
-
-```{r}
-#result$beta_samples
-```
-
-```{r}
-result$y_pred
-```
 
 ```{r}
 result$mspe
-```
-
-```{r}
 result$time
 ```
 
-## Visualization of Posterior Samples
+
 Let's check MCMC convergence of the reciprocal Bayesian LASSO estimator through two visualizations: trace plots and histograms.
 
-```{r}
+```{r message = FALSE, warning = FALSE}
 ######################################
 # Visualization of Posterior Samples #
 ######################################
@@ -110,16 +109,20 @@ Let's check MCMC convergence of the reciprocal Bayesian LASSO estimator through 
 # Trace Plot #
 ##############
 
+top_indices <- order(result$beta_postmed, decreasing = TRUE)[1:10]
+top_values <- result$beta_postmed[top_indices]
+
+
 library(coda)
 par(mar=c(2,2,2,2))
-plot(mcmc(result$beta_samples[,1:9]),density=FALSE,smooth=TRUE)
+plot(mcmc(result$beta_samples[,top_indices]),density=FALSE,smooth=TRUE)
 ```
 
-```{r}
+```{r message = FALSE, warning = FALSE}
 #############
 # Histogram #
 #############
 
 library(psych)
-multi.hist(result$beta_samples[,1:9],density=TRUE,main="")
+multi.hist(result$beta_samples[,top_indices],density=TRUE,main="")
 ```
