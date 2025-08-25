@@ -208,6 +208,8 @@ through two visualizations: trace plots and histograms.
     par(mar=c(2,2,2,2))
     plot(mcmc(result$beta_samples[,1:9]),density=FALSE,smooth=TRUE)
 ```
+
+https://github.com/himelmallick/BayesCOOP/blob/master/misc/unnamed-chunk-13-1.png
 ![](https://github.com/himelmallick/BayesCOOP/blob/master/misc/unnamed-chunk-13-1.png)
 
 ```         
