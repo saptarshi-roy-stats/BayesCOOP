@@ -26,17 +26,24 @@ bayesCoop(data_train, data_test, family = "gaussian",
 \item{prev_thresh}{threshold for prevalence of features. Default value: 0.1.}
 \item{Warning}{Default is TRUE.}
 \item{verbose}{Default is TRUE.}
+\item{control}{a named list with one element `rho`, which is a numeric vector of user-specified rho values.}
 }
 \value{
 A list containing approximate pseudo-posterior samples of the regression coefficients and hyperparameters:
 \itemize{
-\item beta_postmed: vector of size px1, posterior median estimate of the beta.
-\item rho_postmed: scalar, posterior median estimate of the agreement penalty $\rho$.
-\item beta_samples: matrix of size npost x p where npost is the number of posterior samples. Returns  approximate posterior samples of beta.
 \item y_pred: a vector. Returns the predicted value of y.
-\item mspe: a scalar. Returns the mean squared prediction error.
+\item mspe: a scalar. Returns the mean squared prediction error.\item beta_postmed: vector of size px1, posterior median estimate of the beta.
+\item beta_samples: matrix of size npost x p where npost is the number of posterior samples. Returns  approximate posterior samples of beta.
+\item beta_postmed: posterior median as an estimate for beta.
+\item rho_postmed: scalar, posterior median estimate of the agreement penalty $\rho$.
 \item time: a scalar. Returns the time needed to run the procedure. 
 }
+A list containing the following components if `bb` is FALSE.
+\item y_pred: predicted values of response.
+\item mspe: mean square prediction error.
+\item beta_MAP: MAP estimate of beta.
+\item rho_MAP: optimal rho among the specified values chosen corresponding to minimum mean square prediction error, returns the same value if only one value for rho is specified in `control`.
+\item time: time taken for MAP estimation to run.
 }
 \description{
 \code{BayesCOOP} provides the analysis codes from the Bayesian multiview project.
