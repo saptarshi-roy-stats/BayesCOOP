@@ -1,7 +1,7 @@
 ---
 title: "README"
 output: md_document
-date: "2025-08-24"
+date: "2025-10-05"
 ---
 
 ```{r setup, include=FALSE}
@@ -14,115 +14,9 @@ The repository contains the analysis codes from the Bayesian coopertive project.
 
 ## Dependencies
 
-`BayesCOOP` requires the following `R` package: `devtools` (for installation only). Please install it before installing `BayesCOOP`, which can be done as follows (execute from within a fresh R session):
+`BayesCOOP` requires the following `R` packages: `devtools` (for installation only), `caret`, `rmutil`, `MCMCpack`. Please install these before installing `BayesCOOP`, which can be done as follows (execute from within a fresh R session):
 
 ```r
 install.packages("devtools")
 library(devtools)
-```
-## Installation
- 
-Once the dependencies are installed, `BayesCOOP` can be loaded using the following command:
-```r
-devtools::install_github("himelmallick/BayesCOOP")
-library(BayesCOOP)
-```
-
-## Load libraries 
-```{r message = FALSE, warning=FALSE}
-library(BhGLM)
-library(tidyverse)
-library(caret)
-```
-
-## sourcing required functions
-```{r message = FALSE, warning=FALSE}
-source("https://github.com/himelmallick/BayesCOOP/blob/master/R/helperFunctions.R")
-```
-
-## Loading the StelzerDOS real dataset
-```{r message = FALSE, warning=FALSE}
-data_train = get(load(url("https://raw.githubusercontent.com/himelmallick/IntegratedLearner/master/data/StelzerDOS.RData"))); rm(pcl)
-data_test = get(load(url("https://raw.githubusercontent.com/himelmallick/IntegratedLearner/master/data/StelzerDOS_valid.RData"))); rm(pcl)
-```
-
-## Pre-processing the longitudinal data by considering only baseline observations 
-
-### Remove metabolomics from the train set to match with validation
-```{r message = FALSE, warning=FALSE}
-data_train$feature_metadata = data_train$feature_metadata %>% dplyr::filter(featureType!='Metabolomics')
-data_train$feature_table = data_train$feature_table[rownames(data_train$feature_metadata),]
-```
-
-### Consider only baseline observations for the train set
-```{r message = FALSE, warning=FALSE}
-positions = grep("A", colnames(data_train$feature_table), ignore.case = TRUE)
-data_train$feature_table = data_train$feature_table[, positions]
-data_train$sample_metadata = data_train$sample_metadata[positions, ]
-rm(positions)
-```
-
-### Consider only baseline observations for the validation set
-```{r message = FALSE, warning=FALSE}
-positions = grep("G1", colnames(data_test$feature_table))
-data_test$feature_table = data_test$feature_table[, positions]
-data_test$sample_metadata = data_test$sample_metadata[positions, ]
-rm(positions)
-```
-
-# BayesCoop Implementation 
-```r 
-set.seed(1)
-result = bayesCoop(data_train, data_test, family = "gaussian", 
-                   ss = c(0.05, 1), group = TRUE,
-                   bb = TRUE, alpha_dirich = 1, 
-                   bbiters = 1100, bbburn = 100, maxit = 100,
-                   filter = TRUE, abd_thresh = 0, prev_thresh = 0.1,
-                   Warning = TRUE, verbose = TRUE)
-```
-
-```{r BayesCOOP_result, message = FALSE, warning = FALSE, echo = FALSE, results='hide'}
-set.seed(1)
-result = bayesCoop(data_train, data_test, family = "gaussian", 
-                   ss = c(0.05, 1), group = TRUE,
-                   bb = TRUE, alpha_dirich = 1, 
-                   bbiters = 1100, bbburn = 100, maxit = 100,
-                   filter = TRUE, abd_thresh = 0, prev_thresh = 0.1,
-                   Warning = TRUE, verbose = TRUE)
-```
-
-
-```{r}
-result$mspe
-result$time
-```
-
-
-Let's check MCMC convergence of the reciprocal Bayesian LASSO estimator through two visualizations: trace plots and histograms.
-
-```{r message = FALSE, warning = FALSE}
-######################################
-# Visualization of Posterior Samples #
-######################################
-
-##############
-# Trace Plot #
-##############
-
-top_indices <- order(result$beta_postmed, decreasing = TRUE)[1:10]
-top_values <- result$beta_postmed[top_indices]
-
-
-library(coda)
-par(mar=c(2,2,2,2))
-plot(mcmc(result$beta_samples[,top_indices]),density=FALSE,smooth=TRUE)
-```
-
-```{r message = FALSE, warning = FALSE}
-#############
-# Histogram #
-#############
-
-library(psych)
-multi.hist(result$beta_samples[,top_indices],density=TRUE,main="")
 ```
