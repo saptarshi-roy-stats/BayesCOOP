@@ -17,16 +17,6 @@ which can be done as follows (execute from within a fresh R session):
 Once the dependencies are installed, `BayesCOOP` can be loaded using the
 following command:
 
-    # # If the package isn't installed, load it from source (package root) for knitting
-    # if (!requireNamespace("BayesCOOP", quietly = TRUE)) {
-    #   if (requireNamespace("pkgload", quietly = TRUE)) {
-    #     # load the current package source without attaching everything to the search path
-    #     pkgload::load_all(export_all = FALSE, helpers = FALSE, attach_testthat = FALSE)
-    #   }
-    # } else {
-    #   devtools::install_github("himelmallick/BayesCOOP")
-    #   library(BayesCOOP)
-    # }
     devtools::install_github("himelmallick/BayesCOOP", quiet = TRUE)
     library(BayesCOOP)
 
@@ -74,7 +64,7 @@ following command:
     print(result$mspe)
     ## [1] 501.0142
     print(result$time)
-    ## [1] 3.179
+    ## [1] 3.2
 
     top_indices <- order(abs(result$beta_postmed), decreasing = TRUE)[1:10]
     top_values <- result$beta_postmed[top_indices]
