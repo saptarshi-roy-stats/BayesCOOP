@@ -1,6 +1,12 @@
 #' @import BhGLM
 #' @import caret
 #' @import dplyr
+#' @keywords internal
+#' @importFrom BhGLM covariates
+#' @importFrom dplyr lag filter
+#' @importFrom stats nobs
+#' @importFrom survival cluster
+NULL
 
 ###############################################
 ############## helper functions ###############
