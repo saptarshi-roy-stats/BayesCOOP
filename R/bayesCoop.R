@@ -2,11 +2,11 @@
 #'
 #' @description This function implements the BayesCOOP methodology for supervised multimodal integration. It combines jittered group spike-and-slab LASSO regularization with intermediate fusion to enable integrative learning across multiple data modalities. For uncertainty quantification, BayesCOOP applies the Bayesian bootstrap to generate approximate posterior samples by performing maximum a posteriori (MAP) estimation on jittered and resampled multimodal datasets. Currently, only continuous outcomes are supported.
 #'
-#' @param data_train a list of feature_table, sample_metadata and feature_metadata from training data(unstandardized). {Cite integrated learner for more references}.
-#' @param data_test a list of feature_table, sample_metadata and feature_metadata from testing data(unstandardized). {Cite integrated learner for more references}.
+#' @param data_train a list of feature_table, sample_metadata and feature_metadata from training data(unstandardized). See \emph{IntegratedLearner} for more details.
+#' @param data_test a list of feature_table, sample_metadata and feature_metadata from testing data(unstandardized). See \emph{IntegratedLearner} for more details..
 #' @param family currently supports only Gaussian family. Default value: "gaussian".
 #' @param ss a two-dimensional vector representing the scale parameters of the spike and slab parts, namely, s0 and s1 respectively, with s0 < s1. Default value: ss = c(s0, s1) = c(0.05, 1).
-#' @param group logical. If TRUE, group is a list of variable names, group[[k]] includes variables in the k-th group. For ungrouped predictors, the prior is double-exponential with scale ss[2] and mean 0. If FALSE, group = NULL. Default value: TRUE.
+#' @param group Logical. If \code{TRUE}, \code{group} is a list of variable names where \code{group[[k]]} includes variables in the \eqn{k}-th group. For ungrouped predictors, the prior is double-exponential with scale \code{ss[2]} and mean 0. If \code{FALSE}, \code{group = NULL}. Default is \code{TRUE}.
 #' @param bb logical. If TRUE, Bayesian bootstrap is implemented, else, maximum a posteriori (MAP) estimation is implemented which requires additional parameters to be passed to \code{control}. Default value: TRUE.
 #' @param alpha_dirich shape parameter for Dirichlet distribution. Default value: 1.
 #' @param bbiters number of Bayesian bootstrap iterations. Default value: 1100.
@@ -33,10 +33,13 @@
 #' \item{time}{time taken for MAP estimation to run}
 #' @import BhGLM
 #' @import caret
+#' @import dplyr
+#' @import glmnet
 #' @import MCMCpack
 #' @import rmutil
-#' @import tidyverse
+#' @import stats
 #' @import truncnorm
+#' @import survival
 #' @export
 
 bayesCoop <- function(data_train, data_test, family = "gaussian", 

@@ -24,15 +24,15 @@ bayesCoop(
 )
 }
 \arguments{
-\item{data_train}{a list of feature_table, sample_metadata and feature_metadata from training data(unstandardized). {Cite integrated learner for more references}.}
+\item{data_train}{a list of feature_table, sample_metadata and feature_metadata from training data(unstandardized). See \emph{IntegratedLearner} for more details.}
 
-\item{data_test}{a list of feature_table, sample_metadata and feature_metadata from testing data(unstandardized). {Cite integrated learner for more references}.}
+\item{data_test}{a list of feature_table, sample_metadata and feature_metadata from testing data(unstandardized). See \emph{IntegratedLearner} for more details..}
 
 \item{family}{currently supports only Gaussian family. Default value: "gaussian".}
 
 \item{ss}{a two-dimensional vector representing the scale parameters of the spike and slab parts, namely, s0 and s1 respectively, with s0 < s1. Default value: ss = c(s0, s1) = c(0.05, 1).}
 
-\item{group}{logical. If TRUE, group is a list of variable names, group[\link{k}] includes variables in the k-th group. For ungrouped predictors, the prior is double-exponential with scale ss\link{2} and mean 0. If FALSE, group = NULL. Default value: TRUE.}
+\item{group}{Logical. If \code{TRUE}, \code{group} is a list of variable names where \code{group[[k]]} includes variables in the \eqn{k}-th group. For ungrouped predictors, the prior is double-exponential with scale \code{ss[2]} and mean 0. If \code{FALSE}, \code{group = NULL}. Default is \code{TRUE}.}
 
 \item{bb}{logical. If TRUE, Bayesian bootstrap is implemented, else, maximum a posteriori (MAP) estimation is implemented which requires additional parameters to be passed to \code{control}. Default value: TRUE.}
 
