@@ -12,7 +12,7 @@ which can be done as follows (execute from within a fresh R session):
     install.packages("devtools")
     #> 
     #> The downloaded binary packages are in
-    #>  /var/folders/c8/vl4b3y8s66g_s23mlmvpzvj80000gn/T//Rtmpq2aZPP/downloaded_packages
+    #>  /var/folders/c8/vl4b3y8s66g_s23mlmvpzvj80000gn/T//RtmpxlNsu3/downloaded_packages
     library(devtools)
     #> Loading required package: usethis
 
@@ -21,17 +21,30 @@ which can be done as follows (execute from within a fresh R session):
 Once the dependencies are installed, `BayesCOOP` can be loaded using the
 following command:
 
-    # If the package isn't installed, load it from source (package root) for knitting
-    if (!requireNamespace("BayesCOOP", quietly = TRUE)) {
-      if (requireNamespace("pkgload", quietly = TRUE)) {
-        # load the current package source without attaching everything to the search path
-        pkgload::load_all(export_all = FALSE, helpers = FALSE, attach_testthat = FALSE)
-      }
-    } else {
-      devtools::install_github("himelmallick/BayesCOOP")
-      library(BayesCOOP)
-    }
-    #> ℹ Loading BayesCOOP
+    # # If the package isn't installed, load it from source (package root) for knitting
+    # if (!requireNamespace("BayesCOOP", quietly = TRUE)) {
+    #   if (requireNamespace("pkgload", quietly = TRUE)) {
+    #     # load the current package source without attaching everything to the search path
+    #     pkgload::load_all(export_all = FALSE, helpers = FALSE, attach_testthat = FALSE)
+    #   }
+    # } else {
+    #   devtools::install_github("himelmallick/BayesCOOP")
+    #   library(BayesCOOP)
+    # }
+    devtools::install_github("himelmallick/BayesCOOP")
+    #> Using GitHub PAT from the git credential store.
+    #> Downloading GitHub repo himelmallick/BayesCOOP@HEAD
+    #> 
+    #> ── R CMD build ─────────────────────────────────────────────────────────────────
+    #>      checking for file ‘/private/var/folders/c8/vl4b3y8s66g_s23mlmvpzvj80000gn/T/RtmpxlNsu3/remotes3d5e4c491596/himelmallick-BayesCOOP-1b8ffd4/DESCRIPTION’ ...  ✔  checking for file ‘/private/var/folders/c8/vl4b3y8s66g_s23mlmvpzvj80000gn/T/RtmpxlNsu3/remotes3d5e4c491596/himelmallick-BayesCOOP-1b8ffd4/DESCRIPTION’
+    #>   ─  preparing ‘BayesCOOP’:
+    #>      checking DESCRIPTION meta-information ...  ✔  checking DESCRIPTION meta-information
+    #>   ─  checking for LF line-endings in source and make files and shell scripts
+    #>   ─  checking for empty or unneeded directories
+    #>   ─  building ‘BayesCOOP_0.1.0.tar.gz’
+    #>      
+    #> 
+    library(BayesCOOP)
 
 ## Example Implementation
 
@@ -77,7 +90,7 @@ following command:
     print(result$mspe)
     #> [1] 501.0142
     print(result$time)
-    #> [1] 3.169
+    #> [1] 3.228
 
     top_indices <- order(abs(result$beta_postmed), decreasing = TRUE)[1:10]
     top_values <- result$beta_postmed[top_indices]
