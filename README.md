@@ -10,11 +10,11 @@ installation only). Please install it before installing `BayesCOOP`,
 which can be done as follows (execute from within a fresh R session):
 
     install.packages("devtools")
-    #> 
-    #> The downloaded binary packages are in
-    #>  /var/folders/c8/vl4b3y8s66g_s23mlmvpzvj80000gn/T//RtmpxlNsu3/downloaded_packages
+    ## 
+    ## The downloaded binary packages are in
+    ##  /var/folders/c8/vl4b3y8s66g_s23mlmvpzvj80000gn/T//Rtmpc4pxl0/downloaded_packages
     library(devtools)
-    #> Loading required package: usethis
+    ## Loading required package: usethis
 
 ## Installation
 
@@ -32,18 +32,18 @@ following command:
     #   library(BayesCOOP)
     # }
     devtools::install_github("himelmallick/BayesCOOP")
-    #> Using GitHub PAT from the git credential store.
-    #> Downloading GitHub repo himelmallick/BayesCOOP@HEAD
-    #> 
-    #> ── R CMD build ─────────────────────────────────────────────────────────────────
-    #>      checking for file ‘/private/var/folders/c8/vl4b3y8s66g_s23mlmvpzvj80000gn/T/RtmpxlNsu3/remotes3d5e4c491596/himelmallick-BayesCOOP-1b8ffd4/DESCRIPTION’ ...  ✔  checking for file ‘/private/var/folders/c8/vl4b3y8s66g_s23mlmvpzvj80000gn/T/RtmpxlNsu3/remotes3d5e4c491596/himelmallick-BayesCOOP-1b8ffd4/DESCRIPTION’
-    #>   ─  preparing ‘BayesCOOP’:
-    #>      checking DESCRIPTION meta-information ...  ✔  checking DESCRIPTION meta-information
-    #>   ─  checking for LF line-endings in source and make files and shell scripts
-    #>   ─  checking for empty or unneeded directories
-    #>   ─  building ‘BayesCOOP_0.1.0.tar.gz’
-    #>      
-    #> 
+    ## Using GitHub PAT from the git credential store.
+    ## Downloading GitHub repo himelmallick/BayesCOOP@HEAD
+    ## 
+    ## ── R CMD build ─────────────────────────────────────────────────────────────────
+    ##      checking for file ‘/private/var/folders/c8/vl4b3y8s66g_s23mlmvpzvj80000gn/T/Rtmpc4pxl0/remotes3e5b3527976b/himelmallick-BayesCOOP-b36b4d5/DESCRIPTION’ ...  ✔  checking for file ‘/private/var/folders/c8/vl4b3y8s66g_s23mlmvpzvj80000gn/T/Rtmpc4pxl0/remotes3e5b3527976b/himelmallick-BayesCOOP-b36b4d5/DESCRIPTION’
+    ##   ─  preparing ‘BayesCOOP’:
+    ##    checking DESCRIPTION meta-information ...  ✔  checking DESCRIPTION meta-information
+    ##   ─  checking for LF line-endings in source and make files and shell scripts
+    ##   ─  checking for empty or unneeded directories
+    ##   ─  building ‘BayesCOOP_0.1.0.tar.gz’
+    ##      
+    ## 
     library(BayesCOOP)
 
 ## Example Implementation
@@ -88,18 +88,18 @@ following command:
                           Warning = TRUE, verbose = TRUE, control = list())
 
     print(result$mspe)
-    #> [1] 501.0142
+    ## [1] 501.0142
     print(result$time)
-    #> [1] 3.228
+    ## [1] 3.177
 
     top_indices <- order(abs(result$beta_postmed), decreasing = TRUE)[1:10]
     top_values <- result$beta_postmed[top_indices]
     if (!requireNamespace("psych", quietly = TRUE)) {
       install.packages("psych", repos = "https://cloud.r-project.org")
     }
-    #> Registered S3 method overwritten by 'psych':
-    #>   method         from  
-    #>   plot.residuals rmutil
+    ## Registered S3 method overwritten by 'psych':
+    ##   method         from  
+    ##   plot.residuals rmutil
     library(psych)
     multi.hist(result$beta_samples[,top_indices],density=TRUE,main="")
 

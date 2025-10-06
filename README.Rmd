@@ -5,7 +5,7 @@ date: "2025-10-06"
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+knitr::opts_chunk$set(collapse = TRUE)
 options(repos = c(CRAN = "https://cloud.r-project.org"))
 ```
 
