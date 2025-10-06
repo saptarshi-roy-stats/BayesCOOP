@@ -12,7 +12,7 @@ which can be done as follows (execute from within a fresh R session):
     install.packages("devtools")
     #> 
     #> The downloaded binary packages are in
-    #>  /var/folders/c8/vl4b3y8s66g_s23mlmvpzvj80000gn/T//RtmpR6Bnso/downloaded_packages
+    #>  /var/folders/c8/vl4b3y8s66g_s23mlmvpzvj80000gn/T//Rtmpq2aZPP/downloaded_packages
     library(devtools)
     #> Loading required package: usethis
 
@@ -77,4 +77,17 @@ following command:
     print(result$mspe)
     #> [1] 501.0142
     print(result$time)
-    #> [1] 3.202
+    #> [1] 3.169
+
+    top_indices <- order(abs(result$beta_postmed), decreasing = TRUE)[1:10]
+    top_values <- result$beta_postmed[top_indices]
+    if (!requireNamespace("psych", quietly = TRUE)) {
+      install.packages("psych", repos = "https://cloud.r-project.org")
+    }
+    #> Registered S3 method overwritten by 'psych':
+    #>   method         from  
+    #>   plot.residuals rmutil
+    library(psych)
+    multi.hist(result$beta_samples[,top_indices],density=TRUE,main="")
+
+![](README_files/figure-markdown_strict/unnamed-chunk-6-1.png)

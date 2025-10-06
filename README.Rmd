@@ -90,3 +90,13 @@ result = BayesCOOP::bayesCoop(data_train, data_test, family = "gaussian",
 print(result$mspe)
 print(result$time)
 ```
+
+```{r}
+top_indices <- order(abs(result$beta_postmed), decreasing = TRUE)[1:10]
+top_values <- result$beta_postmed[top_indices]
+if (!requireNamespace("psych", quietly = TRUE)) {
+  install.packages("psych", repos = "https://cloud.r-project.org")
+}
+library(psych)
+multi.hist(result$beta_samples[,top_indices],density=TRUE,main="")
+```
