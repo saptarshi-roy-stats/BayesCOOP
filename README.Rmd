@@ -17,7 +17,7 @@ The repository houses the **`BayesCOOP`** R package for multimodal integration f
 
 `BayesCOOP` requires the following `R` package: `devtools` (for installation only). Please install it before installing `BayesCOOP`, which can be done as follows (execute from within a fresh R session):
 
-```{r install, warning=FALSE}
+```{r install, warning=FALSE, message = FALSE, results = "hide"}
 install.packages("devtools")
 library(devtools)
 ```
@@ -26,7 +26,7 @@ library(devtools)
 
 Once the dependencies are installed, `BayesCOOP` can be loaded using the following command:
 
-```{r bcoop, warning=FALSE, message=FALSE}
+```{r bcoop, warning=FALSE, message=FALSE, results = "hide"}
 # # If the package isn't installed, load it from source (package root) for knitting
 # if (!requireNamespace("BayesCOOP", quietly = TRUE)) {
 #   if (requireNamespace("pkgload", quietly = TRUE)) {
@@ -37,7 +37,7 @@ Once the dependencies are installed, `BayesCOOP` can be loaded using the followi
 #   devtools::install_github("himelmallick/BayesCOOP")
 #   library(BayesCOOP)
 # }
-devtools::install_github("himelmallick/BayesCOOP")
+devtools::install_github("himelmallick/BayesCOOP", quiet = TRUE)
 library(BayesCOOP)
 ```
 
@@ -93,7 +93,7 @@ print(result$mspe)
 print(result$time)
 ```
 
-```{r}
+```{r, message=FALSE}
 top_indices <- order(abs(result$beta_postmed), decreasing = TRUE)[1:10]
 top_values <- result$beta_postmed[top_indices]
 if (!requireNamespace("psych", quietly = TRUE)) {

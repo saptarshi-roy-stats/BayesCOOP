@@ -10,11 +10,7 @@ installation only). Please install it before installing `BayesCOOP`,
 which can be done as follows (execute from within a fresh R session):
 
     install.packages("devtools")
-    ## 
-    ## The downloaded binary packages are in
-    ##  /var/folders/c8/vl4b3y8s66g_s23mlmvpzvj80000gn/T//RtmpwtFWfk/downloaded_packages
     library(devtools)
-    ## Loading required package: usethis
 
 ## Installation
 
@@ -31,17 +27,7 @@ following command:
     #   devtools::install_github("himelmallick/BayesCOOP")
     #   library(BayesCOOP)
     # }
-    devtools::install_github("himelmallick/BayesCOOP")
-    ## 
-    ## ── R CMD build ─────────────────────────────────────────────────────────────────
-    ##      checking for file ‘/private/var/folders/c8/vl4b3y8s66g_s23mlmvpzvj80000gn/T/RtmpwtFWfk/remotes3f2829f1f416/himelmallick-BayesCOOP-2d663cc/DESCRIPTION’ ...  ✔  checking for file ‘/private/var/folders/c8/vl4b3y8s66g_s23mlmvpzvj80000gn/T/RtmpwtFWfk/remotes3f2829f1f416/himelmallick-BayesCOOP-2d663cc/DESCRIPTION’
-    ##   ─  preparing ‘BayesCOOP’:
-    ##        checking DESCRIPTION meta-information ...  ✔  checking DESCRIPTION meta-information
-    ##   ─  checking for LF line-endings in source and make files and shell scripts
-    ##   ─  checking for empty or unneeded directories
-    ##   ─  building ‘BayesCOOP_0.1.0.tar.gz’
-    ##      
-    ## 
+    devtools::install_github("himelmallick/BayesCOOP", quiet = TRUE)
     library(BayesCOOP)
 
 ## Example Implementation
@@ -88,16 +74,13 @@ following command:
     print(result$mspe)
     ## [1] 501.0142
     print(result$time)
-    ## [1] 3.321
+    ## [1] 3.179
 
     top_indices <- order(abs(result$beta_postmed), decreasing = TRUE)[1:10]
     top_values <- result$beta_postmed[top_indices]
     if (!requireNamespace("psych", quietly = TRUE)) {
       install.packages("psych", repos = "https://cloud.r-project.org")
     }
-    ## Registered S3 method overwritten by 'psych':
-    ##   method         from  
-    ##   plot.residuals rmutil
     library(psych)
     multi.hist(result$beta_samples[,top_indices],density=TRUE,main="")
 
