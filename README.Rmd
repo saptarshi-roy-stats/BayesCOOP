@@ -4,6 +4,11 @@ output: md_document
 date: "2025-10-06"
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+```
+
 # BayesCOOP - Bayesian Cooperative Learning for Multimodal Integration
 
 The repository houses the **`BayesCOOP`** R package for multimodal integration for prediction of continuous outcomes.
@@ -12,7 +17,7 @@ The repository houses the **`BayesCOOP`** R package for multimodal integration f
 
 `BayesCOOP` requires the following `R` package: `devtools` (for installation only). Please install it before installing `BayesCOOP`, which can be done as follows (execute from within a fresh R session):
 
-```{r install, eval=FALSE, warning=FALSE}
+```{r install, warning=FALSE}
 install.packages("devtools")
 library(devtools)
 ```
@@ -21,9 +26,17 @@ library(devtools)
 
 Once the dependencies are installed, `BayesCOOP` can be loaded using the following command:
 
-```{r bcoop, eval=FALSE, warning=FALSE}
-devtools::install_github("himelmallick/BayesCOOP")
-library(BayesCOOP)
+```{r bcoop, warning=FALSE}
+# If the package isn't installed, load it from source (package root) for knitting
+if (!requireNamespace("BayesCOOP", quietly = TRUE)) {
+  if (requireNamespace("pkgload", quietly = TRUE)) {
+    # load the current package source without attaching everything to the search path
+    pkgload::load_all(export_all = FALSE, helpers = FALSE, attach_testthat = FALSE)
+  }
+} else {
+  devtools::install_github("himelmallick/BayesCOOP")
+  library(BayesCOOP)
+}
 ```
 
 ## Example Implementation
@@ -60,5 +73,18 @@ positions = grep("G1", colnames(data_test$feature_table))
 data_test$feature_table = data_test$feature_table[, positions]
 data_test$sample_metadata = data_test$sample_metadata[positions, ]
 rm(positions)
+```
+
+```{r BayesCOOP_result, message = FALSE, warning = FALSE, echo = FALSE, results='hide'}
+set.seed(1)
+result = BayesCOOP::bayesCoop(data_train, data_test, family = "gaussian", 
+                      ss = c(0.05, 1), group = TRUE,
+                      bb = TRUE, alpha_dirich = 1, 
+                      bbiters = 1100, bbburn = 100, maxit = 100,
+                      filter = TRUE, abd_thresh = 0, prev_thresh = 0.1,
+                      Warning = TRUE, verbose = TRUE, control = list())
+
+result$mspe
+result$time
 ```
 

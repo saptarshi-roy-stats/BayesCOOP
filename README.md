@@ -10,15 +10,28 @@ installation only). Please install it before installing `BayesCOOP`,
 which can be done as follows (execute from within a fresh R session):
 
     install.packages("devtools")
+    #> 
+    #> The downloaded binary packages are in
+    #>  /var/folders/c8/vl4b3y8s66g_s23mlmvpzvj80000gn/T//RtmpTQcgpe/downloaded_packages
     library(devtools)
+    #> Loading required package: usethis
 
 ## Installation
 
 Once the dependencies are installed, `BayesCOOP` can be loaded using the
 following command:
 
-    devtools::install_github("himelmallick/BayesCOOP")
-    library(BayesCOOP)
+    # If the package isn't installed, load it from source (package root) for knitting
+    if (!requireNamespace("BayesCOOP", quietly = TRUE)) {
+      if (requireNamespace("pkgload", quietly = TRUE)) {
+        # load the current package source without attaching everything to the search path
+        pkgload::load_all(export_all = FALSE, helpers = FALSE, attach_testthat = FALSE)
+      }
+    } else {
+      devtools::install_github("himelmallick/BayesCOOP")
+      library(BayesCOOP)
+    }
+    #> ℹ Loading BayesCOOP
 
 ## Example Implementation
 
