@@ -12,7 +12,7 @@ which can be done as follows (execute from within a fresh R session):
     install.packages("devtools")
     #> 
     #> The downloaded binary packages are in
-    #>  /var/folders/c8/vl4b3y8s66g_s23mlmvpzvj80000gn/T//RtmpTQcgpe/downloaded_packages
+    #>  /var/folders/c8/vl4b3y8s66g_s23mlmvpzvj80000gn/T//RtmpR6Bnso/downloaded_packages
     library(devtools)
     #> Loading required package: usethis
 
@@ -65,3 +65,16 @@ following command:
     data_test$feature_table = data_test$feature_table[, positions]
     data_test$sample_metadata = data_test$sample_metadata[positions, ]
     rm(positions)
+
+    set.seed(1)
+    result = BayesCOOP::bayesCoop(data_train, data_test, family = "gaussian", 
+                          ss = c(0.05, 1), group = TRUE,
+                          bb = TRUE, alpha_dirich = 1, 
+                          bbiters = 1100, bbburn = 100, maxit = 100,
+                          filter = TRUE, abd_thresh = 0, prev_thresh = 0.1,
+                          Warning = TRUE, verbose = TRUE, control = list())
+
+    print(result$mspe)
+    #> [1] 501.0142
+    print(result$time)
+    #> [1] 3.202
