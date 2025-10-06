@@ -19,3 +19,36 @@ following command:
 
     devtools::install_github("himelmallick/BayesCOOP")
     library(BayesCOOP)
+
+## Example Implementation
+
+## Loading the StelzerDOS real dataset
+
+    data_train = get(load(url("https://raw.githubusercontent.com/himelmallick/IntegratedLearner/master/data/StelzerDOS.RData"))); rm(pcl)
+    data_test = get(load(url("https://raw.githubusercontent.com/himelmallick/IntegratedLearner/master/data/StelzerDOS_valid.RData"))); rm(pcl)
+
+## Pre-processing the longitudinal data by considering only baseline observations
+
+### Remove metabolomics from the train set to match with validation
+
+    if (!requireNamespace("dplyr", quietly = TRUE)) {
+      install.packages("dplyr", repos = "https://cloud.r-project.org")
+    }
+    library(dplyr)
+
+    data_train$feature_metadata = data_train$feature_metadata %>% dplyr::filter(featureType!='Metabolomics')
+    data_train$feature_table = data_train$feature_table[rownames(data_train$feature_metadata),]
+
+### Consider only baseline observations for the train set
+
+    positions = grep("A", colnames(data_train$feature_table), ignore.case = TRUE)
+    data_train$feature_table = data_train$feature_table[, positions]
+    data_train$sample_metadata = data_train$sample_metadata[positions, ]
+    rm(positions)
+
+### Consider only baseline observations for the validation set
+
+    positions = grep("G1", colnames(data_test$feature_table))
+    data_test$feature_table = data_test$feature_table[, positions]
+    data_test$sample_metadata = data_test$sample_metadata[positions, ]
+    rm(positions)
