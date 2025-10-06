@@ -12,7 +12,7 @@ which can be done as follows (execute from within a fresh R session):
     install.packages("devtools")
     ## 
     ## The downloaded binary packages are in
-    ##  /var/folders/c8/vl4b3y8s66g_s23mlmvpzvj80000gn/T//Rtmpc4pxl0/downloaded_packages
+    ##  /var/folders/c8/vl4b3y8s66g_s23mlmvpzvj80000gn/T//RtmpwtFWfk/downloaded_packages
     library(devtools)
     ## Loading required package: usethis
 
@@ -32,13 +32,11 @@ following command:
     #   library(BayesCOOP)
     # }
     devtools::install_github("himelmallick/BayesCOOP")
-    ## Using GitHub PAT from the git credential store.
-    ## Downloading GitHub repo himelmallick/BayesCOOP@HEAD
     ## 
     ## ── R CMD build ─────────────────────────────────────────────────────────────────
-    ##      checking for file ‘/private/var/folders/c8/vl4b3y8s66g_s23mlmvpzvj80000gn/T/Rtmpc4pxl0/remotes3e5b3527976b/himelmallick-BayesCOOP-b36b4d5/DESCRIPTION’ ...  ✔  checking for file ‘/private/var/folders/c8/vl4b3y8s66g_s23mlmvpzvj80000gn/T/Rtmpc4pxl0/remotes3e5b3527976b/himelmallick-BayesCOOP-b36b4d5/DESCRIPTION’
+    ##      checking for file ‘/private/var/folders/c8/vl4b3y8s66g_s23mlmvpzvj80000gn/T/RtmpwtFWfk/remotes3f2829f1f416/himelmallick-BayesCOOP-2d663cc/DESCRIPTION’ ...  ✔  checking for file ‘/private/var/folders/c8/vl4b3y8s66g_s23mlmvpzvj80000gn/T/RtmpwtFWfk/remotes3f2829f1f416/himelmallick-BayesCOOP-2d663cc/DESCRIPTION’
     ##   ─  preparing ‘BayesCOOP’:
-    ##    checking DESCRIPTION meta-information ...  ✔  checking DESCRIPTION meta-information
+    ##        checking DESCRIPTION meta-information ...  ✔  checking DESCRIPTION meta-information
     ##   ─  checking for LF line-endings in source and make files and shell scripts
     ##   ─  checking for empty or unneeded directories
     ##   ─  building ‘BayesCOOP_0.1.0.tar.gz’
@@ -90,7 +88,7 @@ following command:
     print(result$mspe)
     ## [1] 501.0142
     print(result$time)
-    ## [1] 3.177
+    ## [1] 3.321
 
     top_indices <- order(abs(result$beta_postmed), decreasing = TRUE)[1:10]
     top_values <- result$beta_postmed[top_indices]

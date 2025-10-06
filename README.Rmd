@@ -26,7 +26,7 @@ library(devtools)
 
 Once the dependencies are installed, `BayesCOOP` can be loaded using the following command:
 
-```{r bcoop, warning=FALSE}
+```{r bcoop, warning=FALSE, message=FALSE}
 # # If the package isn't installed, load it from source (package root) for knitting
 # if (!requireNamespace("BayesCOOP", quietly = TRUE)) {
 #   if (requireNamespace("pkgload", quietly = TRUE)) {
@@ -43,7 +43,7 @@ library(BayesCOOP)
 
 ## Example Implementation
 ## Loading the StelzerDOS real dataset
-```{r message = FALSE, warning=FALSE}
+```{r, message = FALSE, warning=FALSE}
 data_train = get(load(url("https://raw.githubusercontent.com/himelmallick/IntegratedLearner/master/data/StelzerDOS.RData"))); rm(pcl)
 data_test = get(load(url("https://raw.githubusercontent.com/himelmallick/IntegratedLearner/master/data/StelzerDOS_valid.RData"))); rm(pcl)
 ```
@@ -51,7 +51,7 @@ data_test = get(load(url("https://raw.githubusercontent.com/himelmallick/Integra
 ## Pre-processing the longitudinal data by considering only baseline observations 
 
 ### Remove metabolomics from the train set to match with validation
-```{r message = FALSE, warning=FALSE}
+```{r, message = FALSE, warning=FALSE}
 if (!requireNamespace("dplyr", quietly = TRUE)) {
   install.packages("dplyr", repos = "https://cloud.r-project.org")
 }
@@ -62,7 +62,7 @@ data_train$feature_table = data_train$feature_table[rownames(data_train$feature_
 ```
  
 ### Consider only baseline observations for the train set
-```{r message = FALSE, warning=FALSE}
+```{r, message = FALSE, warning=FALSE}
 positions = grep("A", colnames(data_train$feature_table), ignore.case = TRUE)
 data_train$feature_table = data_train$feature_table[, positions]
 data_train$sample_metadata = data_train$sample_metadata[positions, ]
@@ -70,7 +70,7 @@ rm(positions)
 ```
 
 ### Consider only baseline observations for the validation set
-```{r message = FALSE, warning=FALSE}
+```{r, message = FALSE, warning=FALSE}
 positions = grep("G1", colnames(data_test$feature_table))
 data_test$feature_table = data_test$feature_table[, positions]
 data_test$sample_metadata = data_test$sample_metadata[positions, ]
