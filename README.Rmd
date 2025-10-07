@@ -178,10 +178,13 @@ print(result$time)
 
 ## Early Fusion
 print(mspe_multiview_early)
+print(time_multiview_early)
 ## Intermediate Fusion
 print(mspe_multiview_intermediate)
+print(time_multiview_intermediate)
 ## Late Fusion
 print(mspe_multiview_late)
+print(time_multiview_late)
 ```
 
 

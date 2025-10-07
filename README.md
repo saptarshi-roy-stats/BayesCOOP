@@ -154,17 +154,23 @@ following command:
     print(result$mspe)
     ## [1] 501.0142
     print(result$time)
-    ## [1] 3.969
+    ## [1] 4.163
 
     ## Early Fusion
     print(mspe_multiview_early)
     ## [1] 810.2794
+    print(time_multiview_early)
+    ## [1] 0.003
     ## Intermediate Fusion
     print(mspe_multiview_intermediate)
     ## [1] 844.8788
+    print(time_multiview_intermediate)
+    ## [1] 0.003
     ## Late Fusion
     print(mspe_multiview_late)
     ## [1] 863.6531
+    print(time_multiview_late)
+    ## [1] 0.002
 
 ## References
 
