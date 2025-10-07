@@ -170,6 +170,7 @@ y_pred_late <- predict(fit_multiview_late, newx = xList_test, s = opt_lambda_lat
 mspe_multiview_late <- mean((y_pred_late - y_test) ^ 2)
 ```
 
+### Comparing BayesCOOP with Cooperative Learning
 
 ```{r predictive accuracy comparison, message=FALSE}
 ## BayesCOOP

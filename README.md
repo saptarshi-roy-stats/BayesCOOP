@@ -150,22 +150,24 @@ following command:
     ## mean squared prediction error 
     mspe_multiview_late <- mean((y_pred_late - y_test) ^ 2)
 
+### Comparing BayesCOOP with Cooperative Learning
+
     ## BayesCOOP
     print(result$mspe)
     ## [1] 501.0142
     print(result$time)
-    ## [1] 4.163
+    ## [1] 4.168
 
     ## Early Fusion
     print(mspe_multiview_early)
     ## [1] 810.2794
     print(time_multiview_early)
-    ## [1] 0.003
+    ## [1] 0.002
     ## Intermediate Fusion
     print(mspe_multiview_intermediate)
     ## [1] 844.8788
     print(time_multiview_intermediate)
-    ## [1] 0.003
+    ## [1] 0.002
     ## Late Fusion
     print(mspe_multiview_late)
     ## [1] 863.6531
