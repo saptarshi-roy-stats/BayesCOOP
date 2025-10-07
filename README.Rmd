@@ -67,6 +67,8 @@ data_test$sample_metadata = data_test$sample_metadata[positions, ]
 rm(positions)
 ```
 
+### Implementing BayesCOOP
+
 ```{r BayesCOOP_result, message = FALSE, warning = FALSE, results='hide'}
 set.seed(1)
 result = BayesCOOP::bayesCoop(data_train, data_test, family = "gaussian", 
@@ -78,10 +80,6 @@ result = BayesCOOP::bayesCoop(data_train, data_test, family = "gaussian",
 
 ```
 
-```{r}
-print(result$mspe)
-print(result$time)
-```
 
 ```{r, message=FALSE}
 top_indices <- order(abs(result$beta_postmed), decreasing = TRUE)[1:10]
@@ -92,3 +90,102 @@ if (!requireNamespace("psych", quietly = TRUE)) {
 library(psych)
 multi.hist(result$beta_samples[,top_indices],density=TRUE,main="")
 ```
+
+### Implementing Cooperative Learning [1]
+
+```{r multiview, message=FALSE}
+if (!requireNamespace("multiview", quietly = TRUE)) {
+  install.packages("multiview", repos = "https://cloud.r-project.org")
+}
+library(multiview)
+
+y_train <- BayesCOOP:::gen_datalist(data_train)$y
+y_test <- BayesCOOP:::gen_datalist(data_test)$y
+xList_train <- BayesCOOP:::gen_datalist(data_train)$xList
+xList_test <- BayesCOOP:::gen_datalist(data_test)$xList
+
+## Filtering features
+xList_train <- lapply(xList_train, function(foo) BayesCOOP:::filter_features(foo, abd_thresh = 0, prev_thresh = 0.1))
+xList_test <- lapply(xList_test, function(foo) BayesCOOP:::filter_features(foo, abd_thresh = 0, prev_thresh = 0.1))
+
+## Considering the common features between train and test set
+keep_features <- vector("list", length = length(xList_train))
+for(i in 1:length(keep_features)) {
+    keep_features[[i]] <- intersect(names(xList_train[[i]]), names(xList_test[[i]]))
+    xList_train[[i]] <- as.matrix(xList_train[[i]][, keep_features[[i]], drop = FALSE])
+    xList_test[[i]] <- as.matrix(xList_test[[i]][, keep_features[[i]], drop = FALSE])
+}
+
+xList_train <- lapply(xList_train, function(foo) as.matrix(foo))
+xList_test <- lapply(xList_test, function(foo) as.matrix(foo)) ## need matrix form for multiview
+
+# Function to perform cross-validation for choosing alpha for cooperative learning application
+cvfit_alpha <- function(xlist, y, rho, alpha, fold) {
+  cvfit <- cv.multiview(x_list = xlist, y = y, rho = rho,
+                       alpha = alpha, nfolds = fold)
+  lmin <- cvfit$lambda.min
+  lmin_indx <- which(cvfit$lambda == lmin)
+  cverr_min <- cvfit$cvm[lmin_indx]
+  return(list(lmin = lmin, lmin_indx = lmin_indx, cverr_min = cverr_min,
+              alpha = alpha))
+}
+
+start.time <- Sys.time()
+cv_results_early <- cvfit_alpha(xlist = xList_train, y = y_train, rho = 0, alpha = 1, fold = 5)
+opt_lambda_early <- cv_results_early$lmin
+fit_multiview_early <- multiview(xList_train, y_train, lambda = opt_lambda_early, rho = 0, alpha = 1)
+stop.time <- Sys.time()
+time_multiview_early <- as.numeric(round(difftime(stop.time, start.time, units="min"), 3), units = "mins")
+rm(start.time); rm(stop.time)
+beta_hat_early <- as.vector(fit_multiview_early$beta)
+## prediction
+y_pred_early <- predict(fit_multiview_early, newx = xList_test, s = opt_lambda_early, rho = 0, alpha = 1)
+## mean squared prediction error 
+mspe_multiview_early <- mean((y_pred_early - y_test) ^ 2)
+
+start.time <- Sys.time()
+cv_results_intermediate <- cvfit_alpha(xlist = xList_train, y = y_train, rho = 0.5, alpha = 1, fold = 5)
+opt_lambda_intermediate <- cv_results_intermediate$lmin
+fit_multiview_intermediate <- multiview(xList_train, y_train, lambda = opt_lambda_intermediate, rho = 0.5, alpha = 1)
+stop.time <- Sys.time()
+time_multiview_intermediate <- as.numeric(round(difftime(stop.time, start.time, units="min"), 3), units = "mins")
+rm(start.time); rm(stop.time)
+beta_hat_intermediate <- as.vector(fit_multiview_intermediate$beta)
+## prediction
+y_pred_intermediate <- predict(fit_multiview_intermediate, newx = xList_test, s = opt_lambda_intermediate, rho = 0.5, alpha = 1)
+## mean squared prediction error 
+mspe_multiview_intermediate <- mean((y_pred_intermediate - y_test) ^ 2)
+
+start.time <- Sys.time()
+cv_results_late <- cvfit_alpha(xlist = xList_train, y = y_train, rho = 1, alpha = 1, fold = 5)
+opt_lambda_late <- cv_results_late$lmin
+fit_multiview_late <- multiview(xList_train, y_train, lambda = opt_lambda_late, rho = 1, alpha = 1)
+stop.time <- Sys.time()
+time_multiview_late <- as.numeric(round(difftime(stop.time, start.time, units="min"), 3), units = "mins")
+rm(start.time); rm(stop.time)
+beta_hat_late <- as.vector(fit_multiview_late$beta)
+## prediction
+y_pred_late <- predict(fit_multiview_late, newx = xList_test, s = opt_lambda_late, rho = 1, alpha = 1)
+## mean squared prediction error 
+mspe_multiview_late <- mean((y_pred_late - y_test) ^ 2)
+```
+
+
+```{r predictive accuracy comparison, message=FALSE}
+## BayesCOOP
+print(result$mspe)
+print(result$time)
+
+## Early Fusion
+print(mspe_multiview_early)
+## Intermediate Fusion
+print(mspe_multiview_intermediate)
+## Late Fusion
+print(mspe_multiview_late)
+```
+
+
+## References
+
+[1] Daisy Yi Ding, Shuangning Li, Balasubramanian Narasimhan, and Robert Tibshirani (2022).
+“Cooperative Learning for Multiview Analysis.” Proceedings of the National Academy of Sciences (USA), Vol. 119, No. 38, e2202113119. DOI: [10.1073/pnas.2202113119](https://www.pnas.org/doi/full/10.1073/pnas.2202113119)
