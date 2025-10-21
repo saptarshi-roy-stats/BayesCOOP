@@ -69,7 +69,7 @@ rm(positions)
 
 ### Implementing BayesCOOP
 
-```{r BayesCOOP_result, message = FALSE, warning = FALSE, results='hide'}
+```{r BayesCOOP_result, message = TRUE, warning = FALSE, results='hide'}
 set.seed(1)
 result = BayesCOOP::bayesCoop(data_train, data_test, family = "gaussian", 
                       ss = c(0.05, 1), group = TRUE,
@@ -80,16 +80,6 @@ result = BayesCOOP::bayesCoop(data_train, data_test, family = "gaussian",
 
 ```
 
-
-```{r, message=FALSE}
-top_indices <- order(abs(result$beta_postmed), decreasing = TRUE)[1:10]
-top_values <- result$beta_postmed[top_indices]
-if (!requireNamespace("psych", quietly = TRUE)) {
-  install.packages("psych", repos = "https://cloud.r-project.org")
-}
-library(psych)
-multi.hist(result$beta_samples[,top_indices],density=TRUE,main="")
-```
 
 ### Implementing Cooperative Learning [1]
 
