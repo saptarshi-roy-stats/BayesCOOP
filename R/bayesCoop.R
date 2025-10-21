@@ -191,13 +191,12 @@ bayesCoop <- function(data_train, data_test, family = "gaussian",
         ## Augmented test data
         dataAug_test <- data.Augment(y_test, xList_test_std, rho_postmed)
         y_aug_test <- dataAug_test$y_aug; x_aug_test <- as.matrix(dataAug_test$x_aug)
-        y_aug_hat <- x_aug_test %*% beta_postmed ## point prediction using posterior median of beta
-        y_pred <- y_aug_hat[(1:length(y_test))]
-        mspe <- mean((y_pred - y_test)^2)
 
         y_aug_samples <- do.call("rbind", lapply(1:nrow(y_samples),
                                 function(tt) {drop(x_aug_test %*% beta_samples[tt, ]) + rnorm(nrow(x_aug_test), 0, sqrt(errVar_samples[tt]))}))
         y_samples <- y_aug_samples[, 1:length(y_test)]
+        y_pred <- apply(y_samples, 2, median)
+        mspe <- mean((y_pred - y_test)^2)
         
         output$y_samples <- y_samples
         output$y_pred <- y_pred

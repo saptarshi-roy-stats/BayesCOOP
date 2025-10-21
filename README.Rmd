@@ -69,7 +69,7 @@ rm(positions)
 
 ### Implementing BayesCOOP
 
-```{r BayesCOOP_result, message = TRUE, warning = FALSE, results='hide'}
+```{r BayesCOOP_result, message = FALSE, warning = FALSE, results='hide'}
 set.seed(1)
 result = BayesCOOP::bayesCoop(data_train, data_test, family = "gaussian", 
                       ss = c(0.05, 1), group = TRUE,
