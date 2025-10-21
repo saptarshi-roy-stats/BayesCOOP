@@ -58,11 +58,14 @@ bayesCoop(
 }
 \value{
 a list containing the following components is returned if \code{bb} is TRUE.
+\item{y_samples}{approximate posterior predictive samples}
 \item{y_pred}{predicted values of response}
 \item{mspe}{mean square prediction error}
 \item{beta_samples}{approximate posterior samples of beta}
 \item{beta_postmed}{posterior median as an estimate for beta}
+\item{rho_samples}{approximate posterior samples of rho}
 \item{rho_postmed}{posterior median as an estimate for rho}
+\item{errVar_samples}{approximate posterior samples of error variance}
 \item{time}{time taken for BayesCoop to run}
 a list containing the following components if \code{bb} is FALSE.
 \item{y_pred}{predicted values of response}
