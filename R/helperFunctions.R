@@ -1,8 +1,6 @@
-#' @import BhGLM
 #' @import caret
 #' @import dplyr
 #' @keywords internal
-#' @importFrom BhGLM covariates
 #' @importFrom dplyr lag filter
 #' @importFrom stats nobs
 #' @importFrom survival cluster
@@ -122,7 +120,7 @@ bmlasso.fit.weighted <- function (x, y, family = "gaussian", offset = NULL, epsi
     if (intercept)
         x0 <- cbind(1, x)
 
-    d <- bhglm_prepare(x = x0, intercept = intercept, prior.mean = jitter,
+    d <- bhglm.prepare(x = x0, intercept = intercept, prior.mean = jitter,
                  prior.sd = 1, prior.scale = prior.scale, prior.df = 1,
                  group = group)
     x <- d$x
@@ -177,22 +175,24 @@ bmlasso.fit.weighted <- function (x, y, family = "gaussian", offset = NULL, epsi
     conv <- FALSE
     for (iter in 1:maxit) {
         if (alpha == 1)
-            out <- bhglm_update.scale.p(prior = "mde", b0 = (b[gvars] - prior.mean[-1]),
+            out <- bhglm.update.scale.p(prior = "mde", b0 = (b[gvars] - prior.mean[-1]),
                                   ss = ss, theta = theta) else
-                                      out <- bhglm_update.scale.p(prior = "mt", df = 1e+10,
+                                      out <- bhglm.update.scale.p(prior = "mt", df = 1e+10,
                                    b0 = b[gvars], ss = ss, theta = theta)
         # prior.scale[gvars] <- out[[1]]
         prior.scale = out[[1]]
         p <- out[[2]]
         if (!is.matrix(group))
-            theta <- bhglm_update.ptheta.group(group.vars = group.vars,
+            theta <- bhglm.update.ptheta.group(group.vars = group.vars,
                                          p = p, w = theta.weights, b = bb) else
-                                             theta <- bhglm_update.ptheta.network(theta = theta, p = p,
+                                             theta <- bhglm.update.ptheta.network(theta = theta, p = p,
                                             w = group)
         if (!is.null(inter.hierarchy))
-            theta.weights <- bhglm_update.theta.weights(gvars = gvars,
-                                                  theta.weights = theta.weights, inter.hierarchy = inter.hierarchy,
-                                                  inter.parents = inter.parents, p = p)
+            # theta.weights <- bhglm.update.theta.weights(gvars = gvars,
+            #                                       theta.weights = theta.weights, inter.hierarchy = inter.hierarchy,
+            #                                       inter.parents = inter.parents, p = p)
+            theta.weights <- bhglm.update.theta.weights(eff.hierarchy = inter.hierarchy,
+                eff.parents = inter.parents, p = p)
         Pf <- 1/(prior.scale + 1e-10)
         f <- glmnet(x = x, y = y, family = family, offset = offset,
                     alpha = alpha, penalty.factor = Pf, weights = lhood_weights,
@@ -217,7 +217,7 @@ bmlasso.fit.weighted <- function (x, y, family = "gaussian", offset = NULL, epsi
     f$linear.predictors <- predict(f, newx = x, type = "link",
                                    offset = offset)
     # if (family == "gaussian")
-    #     f$dispersion <- bhglm_bglm(y ~ f$linear.predictors - 1, start = 1,
+    #     f$dispersion <- bhglm.bglm(y ~ f$linear.predictors - 1, start = 1,
     #                          prior = De(1, 0), verbose = FALSE)$dispersion
     f$iter <- iter
     f$init <- init
@@ -245,9 +245,6 @@ bmlasso.weighted <- function (x, y, family = c("gaussian", "binomial", "poisson"
           theta.weights = NULL, inter.hierarchy = NULL, inter.parents = NULL,
           Warning = FALSE, verbose = FALSE)
 {
-    # if (!requireNamespace("glmnet"))
-    #     install.packages("glmnet")
-    # require(glmnet)
     start.time <- Sys.time()
     call <- match.call()
     x <- as.matrix(x)
@@ -325,7 +322,7 @@ bmlasso_cv = function(y, xList,
 
         ## bmlasso with grouped predictors for fixed rho
         y_aug_train = dataAug_train$y_aug; x_aug_train = dataAug_train$x_aug
-        fit_bmlasso_group = bmlasso(x = as.matrix(x_aug_train), y = y_aug_train, family = family,
+        fit_bmlasso_group = bhglm.bmlasso(x = as.matrix(x_aug_train), y = y_aug_train, family = family,
                                     maxit = maxit, alpha = 1, ss = ss,
                                     group = group, Warning = TRUE, verbose = TRUE)
         beta_hat_group[[i]] = fit_bmlasso_group$coefficients[-1]
@@ -355,7 +352,7 @@ bmlasso_cv = function(y, xList,
     }
 
     yAug = dataAug_train$y_aug; xAug = dataAug_train$x_aug
-    model_bmlasso = bmlasso(x = as.matrix(xAug), y = yAug, family = family,
+    model_bmlasso = bhglm.bmlasso(x = as.matrix(xAug), y = yAug, family = family,
                             maxit = maxit, alpha = 1, ss = ss,
                             group = group, Warning = TRUE, verbose = TRUE)
     beta_hat_bmlasso = model_bmlasso$coefficients[-1]

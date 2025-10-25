@@ -144,9 +144,9 @@ following command:
 
     ## BayesCOOP
     print(result$mspe)
-    ## [1] 501.0142
+    ## [1] 435.7656
     print(result$time)
-    ## [1] 4.187
+    ## [1] 4.153
 
     ## Early Fusion
     print(mspe_multiview_early)

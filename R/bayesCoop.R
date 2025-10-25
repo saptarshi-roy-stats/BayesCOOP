@@ -34,7 +34,6 @@
 #' \item{beta_MAP}{MAP estimate of beta}
 #' \item{rho_MAP}{optimal rho among the specified values chosen corresponding to minimum mean square prediction error, returns the same value if only one value for rho is specified in `control`}
 #' \item{time}{time taken for MAP estimation to run}
-#' @import BhGLM
 #' @import caret
 #' @import dplyr
 #' @import glmnet
