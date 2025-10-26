@@ -1,0 +1,208 @@
+---
+title: "BayesCOOP: End-to-End Tutorial"
+author: "Saptarshi Roy, Sreya Sarkar, Himel Mallick"
+output:
+  html_document:
+    theme: readable
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    number_sections: false
+date: "2025-10-25"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE,
+  warning = FALSE
+)
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+set.seed(1)
+```
+
+# Overview
+
+**BayesCOOP** is a scalable Bayesian framework for supervised multimodal data integration. It currently supports continuous outcomes.
+
+BayesCOOP combines fast maximum a posteriori (MAP) estimation with Bayesian bootstrap–based uncertainty quantification. Using a *jittered* group spike-and-slab LASSO shrinkage prior, it jointly selects informative modalities and features and produces accurate predictions with principled uncertainty estimates while remaining computationally efficient.
+
+In this tutorial, we will:
+
+1.  Load and preprocess a longitudinal pregnancy dataset with multiple omics layers (proteomics + immune profiling).
+2.  Fit BayesCOOP.
+3.  Fit a Cooperative Learning baseline ([Ding et al., 2022](https://www.pnas.org/doi/10.1073/pnas.2202113119)).
+4.  Compare predictive performance and runtime.
+
+We will refer to the pregnancy cohort data from [Stelzer et al. (2021)](<https://www.science.org/doi/10.1126/scitranslmed.abd9898>), which profiled longitudinal immune and proteomic changes in late gestation. We treat this as a supervised prediction problem (continuous outcome such as gestational age or days to spontaneous labor).
+
+We will also compare against Cooperative Learning ([Ding et al., 2022](https://www.pnas.org/doi/10.1073/pnas.2202113119)), which is a widely used multiview baseline.
+
+------------------------------------------------------------------------
+
+# 1. Installation and Package Setup
+
+You can install the development version of BayesCOOP from GitHub:
+
+```{r install_bayescoop, eval=FALSE}
+install.packages("devtools")
+devtools::install_github("himelmallick/BayesCOOP")
+library(BayesCOOP)
+```
+
+We will also need `dplyr` for data manipulation and `multiview` for Cooperative Learning (Ding et al.).
+
+```{r packages}
+if (!requireNamespace("dplyr", quietly = TRUE)) {
+  install.packages("dplyr")
+}
+if (!requireNamespace("multiview", quietly = TRUE)) {
+  install.packages("multiview")
+}
+
+library(dplyr)
+library(multiview)
+library(BayesCOOP)
+```
+
+------------------------------------------------------------------------
+
+# 2. Load the Example Dataset
+
+```{r load_data}
+data_train <- get(load(url(
+  "https://raw.githubusercontent.com/himelmallick/IntegratedLearner/master/data/StelzerDOS.RData"
+)))
+data_test <- get(load(url(
+  "https://raw.githubusercontent.com/himelmallick/IntegratedLearner/master/data/StelzerDOS_valid.RData"
+)))
+```
+
+------------------------------------------------------------------------
+
+# 3. Preprocessing
+
+```{r preprocess}
+data_train$feature_metadata <- data_train$feature_metadata %>%
+  dplyr::filter(featureType != "Metabolomics")
+
+data_train$feature_table <- data_train$feature_table[
+  rownames(data_train$feature_metadata), , drop = FALSE
+]
+
+pos_train <- grep("A", colnames(data_train$feature_table), ignore.case = TRUE)
+data_train$feature_table  <- data_train$feature_table[, pos_train, drop = FALSE]
+data_train$sample_metadata <- data_train$sample_metadata[pos_train, , drop = FALSE]
+
+pos_test <- grep("G1", colnames(data_test$feature_table))
+data_test$feature_table   <- data_test$feature_table[, pos_test, drop = FALSE]
+data_test$sample_metadata <- data_test$sample_metadata[pos_test, , drop = FALSE]
+```
+
+------------------------------------------------------------------------
+
+# 4. Fit BayesCOOP
+
+```{r run_bayescoop}
+fit_bayescoop <- BayesCOOP::bayesCoop(
+  data_train,
+  data_test,
+  family       = "gaussian",
+  ss           = c(0.05, 1),
+  group        = TRUE,
+  bb           = TRUE,
+  alpha_dirich = 1,
+  bbiters      = 1100,
+  bbburn       = 100,
+  maxit        = 100,
+  filter       = TRUE,
+  abd_thresh   = 0,
+  prev_thresh  = 0.1,
+  Warning      = TRUE,
+  verbose      = TRUE,
+  control      = list()
+)
+
+fit_bayescoop$mspe
+fit_bayescoop$rho_postmed
+fit_bayescoop$time
+```
+
+------------------------------------------------------------------------
+
+# 5. Cooperative Learning Baseline (Ding et al.)
+
+```{r coop_baseline}
+y_train <- BayesCOOP:::gen_datalist(data_train)$y
+y_test  <- BayesCOOP:::gen_datalist(data_test)$y
+xList_train <- BayesCOOP:::gen_datalist(data_train)$xList
+xList_test  <- BayesCOOP:::gen_datalist(data_test)$xList
+
+xList_train <- lapply(
+  xList_train,
+  function(foo) BayesCOOP:::filter_features(foo, abd_thresh = 0, prev_thresh = 0.1)
+)
+xList_test <- lapply(
+  xList_test,
+  function(foo) BayesCOOP:::filter_features(foo, abd_thresh = 0, prev_thresh = 0.1)
+)
+
+for (i in seq_along(xList_train)) {
+  keep_i <- intersect(names(xList_train[[i]]), names(xList_test[[i]]))
+  xList_train[[i]] <- as.matrix(xList_train[[i]][, keep_i, drop = FALSE])
+  xList_test[[i]]  <- as.matrix(xList_test[[i]][, keep_i, drop = FALSE])
+}
+
+cvfit_alpha <- function(xlist, y, rho, alpha = 1, folds = 5) {
+  cvfit <- multiview::cv.multiview(x_list = xlist, y = y, rho = rho, alpha = alpha, nfolds = folds)
+  list(lambda_min = cvfit$lambda.min)
+}
+
+rhos_to_try <- c("Early" = 0, "Intermediate" = 0.5, "Late" = 1)
+coop_results <- lapply(names(rhos_to_try), function(label) {
+  rho_val <- rhos_to_try[[label]]
+  start_time <- Sys.time()
+  cvres <- cvfit_alpha(xList_train, y_train, rho = rho_val)
+  best_lambda <- cvres$lambda_min
+  fit_mv <- multiview::multiview(xList_train, y_train, lambda = best_lambda, rho = rho_val, alpha = 1)
+  y_pred_mv <- predict(fit_mv, newx = xList_test, s = best_lambda, rho = rho_val, alpha = 1)
+  mspe_mv <- mean((y_pred_mv - y_test)^2)
+  runtime_min <- round(as.numeric(difftime(Sys.time(), start_time, units = "mins")), 3)
+  list(method = label, rho = rho_val, mspe = mspe_mv, time_min = runtime_min)
+})
+
+coop_results
+```
+
+------------------------------------------------------------------------
+
+# 6. Performance Comparison
+
+```{r compare_performance}
+bayescoop_summary <- list(
+  method    = "BayesCOOP (Bayesian bootstrap)",
+  mspe      = fit_bayescoop$mspe,
+  time_min  = fit_bayescoop$time
+)
+
+perf_table <- rbind(
+  data.frame(method = bayescoop_summary$method, mspe = bayescoop_summary$mspe, time_min = bayescoop_summary$time_min),
+  do.call(rbind, lapply(coop_results, function(res) {
+    data.frame(method = paste0("Cooperative Learning (", res$method, ", rho=", res$rho, ")"),
+               mspe = res$mspe, time_min = res$time_min)
+  }))
+)
+
+perf_table
+```
+
+------------------------------------------------------------------------
+
+# 7. Reproducibility
+
+```{r sessioninfo}
+sessionInfo()
+```
+
+------------------------------------------------------------------------
